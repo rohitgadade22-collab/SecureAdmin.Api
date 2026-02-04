@@ -1,0 +1,44 @@
+name: Build and deploy ASP.NET Core API to Azure Web App
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: secureadmin-api
+  AZURE_WEBAPP_PACKAGE_PATH: 'SecureAdmin.Api'
+  DOTNET_VERSION: '7.0.x'
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore SecureAdmin.Api/SecureAdmin.Api.csproj
+
+      - name: Build
+        run: dotnet build SecureAdmin.Api/SecureAdmin.Api.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish SecureAdmin.Api/SecureAdmin.Api.csproj -c Release -o ./publish
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish
