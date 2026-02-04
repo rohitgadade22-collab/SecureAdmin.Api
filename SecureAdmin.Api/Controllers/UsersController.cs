@@ -20,27 +20,36 @@ namespace SecureAdmin.Api.Controllers
         [HttpPost]
         public IActionResult CreateUser(CreateUserDto dto)
         {
-            if (_context.Users.Any(u => u.Email == dto.Email))
-                return BadRequest("User already exists");
-
-            var user = new User
+            try
             {
-                FullName = dto.FullName,
-                Email = dto.Email,
-                PasswordHash = HashPassword(dto.Password),
-                IsActive = true,
-                CreatedDate = DateTime.UtcNow
-            };
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
 
-            return Ok(new
+                if (_context.Users.Any(u => u.Email == dto.Email))
+                    return BadRequest("User already exists");
+
+                var user = new User
+                {
+                    FullName = dto.FullName,
+                    Email = dto.Email,
+                    PasswordHash = HashPassword(dto.Password),
+                    IsActive = true,
+                    CreatedDate = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                return Ok(new
+                {
+                    user.UserId,
+                    user.FullName,
+                    user.Email
+                });
+            }
+            catch (Exception ex)
             {
-                user.UserId,
-                user.FullName,
-                user.Email
-            });
+                return BadRequest(ex.Message);
+            }
         }
         private static string HashPassword(string password)
         {
