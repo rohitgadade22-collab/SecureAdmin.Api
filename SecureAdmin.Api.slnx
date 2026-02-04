@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SecureAdmin.Api/SecureAdmin.Api.csproj" />
+  <Project Path="SecureAdmin.Application/SecureAdmin.Application.csproj" />
+  <Project Path="SecureAdmin.Domain/SecureAdmin.Domain.csproj" />
+  <Project Path="SecureAdmin.Infrastructure/SecureAdmin.Infrastructure.csproj" />
+</Solution>
