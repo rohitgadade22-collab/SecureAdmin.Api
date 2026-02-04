@@ -15,6 +15,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SecureAdmin.Application\SecureAdmin.Application.csproj" />
     <ProjectReference Include="..\SecureAdmin.Infrastructure\SecureAdmin.Infrastructure.csproj" />
   </ItemGroup>
 
