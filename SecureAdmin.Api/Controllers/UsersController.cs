@@ -31,6 +31,7 @@ namespace SecureAdmin.Api.Controllers
                     FullName = dto.FullName,
                     Email = dto.Email,
                     PasswordHash = HashPassword(dto.Password),
+                    Phone=dto.Phone,
                     IsActive = true,
                     CreatedDate = DateTime.UtcNow
                 };
