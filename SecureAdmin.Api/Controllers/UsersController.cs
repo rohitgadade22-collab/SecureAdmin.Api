@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SecureAdmin.Application.DTOs.Users;
 using SecureAdmin.Domain.Entities;
 using SecureAdmin.Infrastructure.Data;
@@ -22,8 +23,6 @@ namespace SecureAdmin.Api.Controllers
         {
             try
             {
-
-
                 if (_context.Users.Any(u => u.Email == dto.Email))
                     return BadRequest("User already exists");
 
@@ -51,6 +50,7 @@ namespace SecureAdmin.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         private static string HashPassword(string password)
         {
             using var sha = SHA256.Create();
@@ -58,5 +58,55 @@ namespace SecureAdmin.Api.Controllers
             return Convert.ToBase64String(bytes);
         }
 
+        //Get All Users
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await _context.Users.ToListAsync();
+            return Ok(users);
+        }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByid(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return BadRequest("User not found!!");
+            }
+            return Ok(user);
+        }
+
+        [HttpPut("{id}")]
+
+        public async Task<IActionResult> Update(int id, UpdateUserDto updateUser)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            user.FullName = updateUser.FullName;
+            user.Email = updateUser.Email;
+            user.IsActive= updateUser.IsActive;
+
+            await _context.SaveChangesAsync();
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+                return NotFound();
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("User deleted");
+        }
     }
 }
