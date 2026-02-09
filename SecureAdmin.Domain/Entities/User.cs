@@ -14,6 +14,7 @@ namespace SecureAdmin.Domain.Entities
         public string Phone {  get; set; }
 
         public string? Address {get;set; }
+        public string? City { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
 
