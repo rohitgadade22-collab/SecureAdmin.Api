@@ -17,14 +17,14 @@ builder.Configuration.AddAzureKeyVault(
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
-//var connectionString = builder.Configuration["DbConnection"];
-
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlServer(connectionString));
+builder.Services.AddOpenApi();
+var connectionString = builder.Configuration["DbConnection"];
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
+
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 builder.Services.AddSwaggerGen();
